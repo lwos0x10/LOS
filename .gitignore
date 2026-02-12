@@ -1,0 +1,23 @@
+# Build directory
+build/
+
+# Object files
+*.o
+*.d
+
+# Libraries
+*.a
+*.so
+
+# Executables
+*.elf
+*.bin
+*.iso
+*.img
+
+# Editor/IDE
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store

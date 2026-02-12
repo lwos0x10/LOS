@@ -1,13 +1,12 @@
-#include <stdint.h>
-
-static uint16_t* VGA = (uint16_t*)0xB8000;
+#include <drivers/vga.h>
 
 void kernel_main(uint32_t mb2_magic, uint32_t mb2_info_ptr) {
         (void)mb2_magic;
         (void)mb2_info_ptr;
-        
-        VGA[0] = 0x0F48;
 
-
+        vga_init();
+        vga_setcolor(VGA_COLOR_LIGHT_BROWN, VGA_COLOR_BLUE);
+        vga_clear();
+        vga_write("Welcome to LOS.");
         for (;;) { __asm__ volatile("hlt"); }
 }

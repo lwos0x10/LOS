@@ -4,11 +4,13 @@ BUILD_DIR   = build
 ISO_DIR     = $(BUILD_DIR)/iso
 GRUB_DIR    = $(ISO_DIR)/boot/grub
 
-CC          = i686-elf-gcc
-LD          = i686-elf-ld
+CROSS_COMPILE ?= i686-elf-
+
+CC          = $(CROSS_COMPILE)gcc
+LD          = $(CROSS_COMPILE)ld
 AS          = nasm
 
-CFLAGS      = -ffreestanding -m32 -O2 -Wall -Wextra
+CFLAGS      = -ffreestanding -m32 -O2 -Wall -Wextra -Ikernel/include
 LDFLAGS     = -m elf_i386 -T linker.ld
 
 SRC_C       := $(shell find . -name "*.c")
