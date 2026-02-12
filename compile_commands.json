@@ -1,0 +1,56 @@
+[
+  {
+    "file": "kernel/klib/string.c",
+    "arguments": [
+      "i686-elf-gcc",
+      "-ffreestanding",
+      "-m32",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-Ikernel/include",
+      "-c",
+      "kernel/klib/string.c",
+      "-o",
+      "build/kernel/klib/string.o"
+    ],
+    "directory": "/home/lwos0x10/Projects/LOS",
+    "output": "build/kernel/klib/string.o"
+  },
+  {
+    "file": "kernel/drivers/vga.c",
+    "arguments": [
+      "i686-elf-gcc",
+      "-ffreestanding",
+      "-m32",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-Ikernel/include",
+      "-c",
+      "kernel/drivers/vga.c",
+      "-o",
+      "build/kernel/drivers/vga.o"
+    ],
+    "directory": "/home/lwos0x10/Projects/LOS",
+    "output": "build/kernel/drivers/vga.o"
+  },
+  {
+    "file": "kernel/kernel.c",
+    "arguments": [
+      "i686-elf-gcc",
+      "-ffreestanding",
+      "-m32",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-Ikernel/include",
+      "-c",
+      "kernel/kernel.c",
+      "-o",
+      "build/kernel/kernel.o"
+    ],
+    "directory": "/home/lwos0x10/Projects/LOS",
+    "output": "build/kernel/kernel.o"
+  }
+]
