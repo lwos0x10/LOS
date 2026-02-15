@@ -6,6 +6,7 @@
 #include <klib/kprintf.h>
 #include <shell/shell.h>
 #include <mm/pmm.h>
+#include <mm/heap.h>
 #include <tools/debug.h>
 
 void kernel_main(uint32_t mb2_magic, uint32_t mb2_info_ptr) {
@@ -25,6 +26,9 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info_ptr) {
         keyboard_init();
 
         pmm_init(mb2_info_ptr);
+        
+        /* Initialize Heap at 4MB, size 1MB */
+        heap_init((void *)0x400000, 1024 * 1024);
 
         /* Enable hardware interrupts */
         __asm__ volatile("sti");

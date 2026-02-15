@@ -7,6 +7,7 @@
 
 #include <cpu/io.h>
 #include <mm/pmm.h>
+#include <mm/heap.h>
 
 #define INPUT_MAX 256
 
@@ -105,6 +106,7 @@ static void cmd_help(void) {
         kprintf("  clear    - Clear the screen\n");
         kprintf("  echo     - Print text (usage: echo <text>)\n");
         kprintf("  info     - Show OS info\n");
+        kprintf("  debug    - Debugging tools (table, info, alloc)\n");
         kprintf("  reboot   - Reboot the system\n");
         kprintf("  poweroff - Shutdown the system\n");
 }
@@ -138,6 +140,56 @@ static void cmd_poweroff(void) {
         kprintf("Poweroff failed (ACPI not supported yet).\n");
         __asm__ volatile("cli; hlt");
         for (;;) {}
+}
+
+static void cmd_alloc_test(void) {
+        kprintf("Testing Heap Allocation...\n");
+        
+        void *ptr1 = kmalloc(100);
+        kprintf("Allocated 100 bytes at 0x%x\n", (uint32_t)ptr1);
+        if (ptr1) {
+             strcpy((char *)ptr1, "Hello Heap!");
+             kprintf("Content: %s\n", (char *)ptr1);
+        }
+        
+        void *ptr2 = kmalloc(50);
+        kprintf("Allocated 50 bytes at 0x%x\n", (uint32_t)ptr2);
+        
+        if (ptr1) kfree(ptr1);
+        kprintf("Freed ptr1\n");
+        
+        void *ptr3 = kmalloc(20);
+        kprintf("Allocated 20 bytes at 0x%x (Should reuse ptr1 space)\n", (uint32_t)ptr3);
+        
+        kfree(ptr2);
+        kfree(ptr3);
+        kprintf("Freed all.\n");
+        
+        /* heap_print_info(); needs to be exposed in header if we want to call it here, 
+           assuming it's in header as 'void heap_print_info(void);' */
+}
+
+
+
+static void cmd_debug(const char *args) {
+        if (!args) {
+                kprintf("Usage: debug <command>\n");
+                kprintf("Commands:\n");
+                kprintf("  table    - Show heap allocation table\n");
+                kprintf("  info     - Show heap summary info\n");
+                kprintf("  alloc    - Run heap allocation test\n");
+                return;
+        }
+        
+        if (strcmp(args, "table") == 0) {
+                heap_print_table();
+        } else if (strcmp(args, "info") == 0) {
+                heap_print_info();
+        } else if (strcmp(args, "alloc") == 0) {
+                cmd_alloc_test();
+        } else {
+                kprintf("Unknown debug command: %s\n", args);
+        }
 }
 
 static void cmd_echo(const char *args) {
@@ -195,6 +247,8 @@ static void shell_execute(void) {
                 cmd_reboot();
         } else if (strcmp(cmd, "poweroff") == 0) {
                 cmd_poweroff();
+        } else if (strcmp(cmd, "debug") == 0) {
+                cmd_debug(args);
         } else {
                 kprintf("Unknown command: %s\n", cmd);
         }
