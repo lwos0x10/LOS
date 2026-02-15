@@ -4,10 +4,13 @@
 #include <klib/kprintf.h>
 #include <klib/string.h>
 
+#include <cpu/io.h>
+
 #define INPUT_MAX 256
 
 static char input[INPUT_MAX];
 
+/* ... shell_readline implementation ... */
 static void shell_readline(void) {
         int len = 0;       /* Current length of input */
         int cursor = 0;    /* Current cursor position (0 to len) */
@@ -96,10 +99,12 @@ static void shell_readline(void) {
 
 static void cmd_help(void) {
         kprintf("Available commands:\n");
-        kprintf("  help   - Show this message\n");
-        kprintf("  clear  - Clear the screen\n");
-        kprintf("  echo   - Print text (usage: echo <text>)\n");
-        kprintf("  info   - Show OS info\n");
+        kprintf("  help     - Show this message\n");
+        kprintf("  clear    - Clear the screen\n");
+        kprintf("  echo     - Print text (usage: echo <text>)\n");
+        kprintf("  info     - Show OS info\n");
+        kprintf("  reboot   - Reboot the system\n");
+        kprintf("  poweroff - Shutdown the system\n");
 }
 
 static void cmd_clear(void) {
@@ -110,6 +115,24 @@ static void cmd_info(void) {
         kprintf("LOS - A hobby operating system\n");
         kprintf("Architecture: i386\n");
         kprintf("VGA: 80x25 text mode\n");
+}
+
+static void cmd_reboot(void) {
+        kprintf("Rebooting...\n");
+        uint8_t good = 0x02;
+        while (good & 0x02)
+                good = inb(0x64);
+        outb(0x64, 0xFE);
+        __asm__ volatile("hlt");
+}
+
+static void cmd_poweroff(void) {
+        kprintf("Shutting down...\n");
+        outw(0x604, 0x2000);  /* QEMU */
+        outw(0xB004, 0x2000); /* Bochs */
+        kprintf("Poweroff failed (ACPI not supported yet).\n");
+        __asm__ volatile("cli; hlt");
+        for (;;) {}
 }
 
 static void cmd_echo(const char *args) {
@@ -163,6 +186,10 @@ static void shell_execute(void) {
                 cmd_info();
         } else if (strcmp(cmd, "echo") == 0) {
                 cmd_echo(args);
+        } else if (strcmp(cmd, "reboot") == 0) {
+                cmd_reboot();
+        } else if (strcmp(cmd, "poweroff") == 0) {
+                cmd_poweroff();
         } else {
                 kprintf("Unknown command: %s\n", cmd);
         }
