@@ -1,6 +1,7 @@
 #include <cpu/idt.h>
 #include <cpu/isr.h>
 #include <cpu/irq.h>
+#include <tools/debug.h>
 
 struct idt_entry idt_entries[256];
 struct idt_ptr   idtp;
@@ -30,4 +31,5 @@ void idt_init(void) {
 
         /* Load the IDT */
         idt_flush((uint32_t)&idtp);
+        initial_debug("IDT Initialized");
 }

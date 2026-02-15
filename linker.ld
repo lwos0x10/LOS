@@ -3,6 +3,8 @@ ENTRY(_start)
 SECTIONS
 {
   . = 1M;
+  _kernel_start = .;
+
 
   .multiboot ALIGN(8) : {
     KEEP(*(.multiboot))
@@ -18,4 +20,6 @@ SECTIONS
     *(COMMON)
     *(.bss*)
   }
+
+  _kernel_end = .;
 }

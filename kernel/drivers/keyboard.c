@@ -1,6 +1,7 @@
 #include <drivers/keyboard.h>
 #include <cpu/irq.h>
 #include <klib/kprintf.h>
+#include <tools/debug.h>
 
 static inline uint8_t inb(uint16_t port) {
         uint8_t ret;
@@ -120,6 +121,7 @@ static void keyboard_callback(struct registers *r) {
 
 void keyboard_init(void) {
         irq_register_handler(1, keyboard_callback);
+        initial_debug("Keyboard Initialized");
 }
 
 void keyboard_echo_debug(void) {

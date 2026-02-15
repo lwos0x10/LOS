@@ -1,6 +1,7 @@
 #include <drivers/pit.h>
 #include <cpu/irq.h>
 #include <klib/kprintf.h>
+#include <tools/debug.h>
 
 static inline void outb(uint16_t port, uint8_t val) {
         __asm__ volatile("outb %0, %1" : : "a"(val), "Nd"(port));
@@ -25,6 +26,8 @@ void pit_init(uint32_t frequency) {
 
         /* Register our timer handler on IRQ 0 */
         irq_register_handler(0, timer_callback);
+        
+        initial_debug("PIT Initialized (%d Hz)", frequency);
 }
 
 uint32_t pit_get_ticks(void) {

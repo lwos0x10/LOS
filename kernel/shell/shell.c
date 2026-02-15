@@ -3,8 +3,10 @@
 #include <drivers/vga.h>
 #include <klib/kprintf.h>
 #include <klib/string.h>
+#include <tools/debug.h>
 
 #include <cpu/io.h>
+#include <mm/pmm.h>
 
 #define INPUT_MAX 256
 
@@ -115,6 +117,9 @@ static void cmd_info(void) {
         kprintf("LOS - A hobby operating system\n");
         kprintf("Architecture: i386\n");
         kprintf("VGA: 80x25 text mode\n");
+        kprintf("Memory: %d MB total, %d KB used\n", 
+                pmm_get_total_memory() / 1024 / 1024,
+                pmm_get_used_memory() / 1024);
 }
 
 static void cmd_reboot(void) {
@@ -206,6 +211,7 @@ static void shell_prompt(void) {
 }
 
 void shell_run(void) {
+        initial_debug("Shell Initialized");
         kprintf("\nType 'help' for available commands.\n\n");
         for (;;) {
                 shell_prompt();

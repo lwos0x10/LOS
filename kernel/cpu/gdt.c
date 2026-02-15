@@ -1,6 +1,6 @@
-#include "klib/kprintf.h"
 #include <cpu/gdt.h>
-#include <drivers/vga.h>
+#include <klib/kprintf.h>
+#include <tools/debug.h>
 
 struct gdt_entry gdt[5];
 struct gdt_ptr gp;
@@ -25,5 +25,5 @@ void gdt_init() {
         gdt_set_gate(4, 0, 0xFFFFFFFF, 0xF2, 0xCF); // User Data
 
         gdt_flush((uint32_t)&gp);
-        kprintf("GDT LOADED!\n");
+        initial_debug("GDT Initialized");
 }

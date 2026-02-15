@@ -71,10 +71,7 @@ char* htoa(unsigned int value) {
     return str;
 }
 
-void kprintf(const char *fmt, ...) {
-        va_list args;
-        va_start(args, fmt);
-
+void vkprintf(const char *fmt, va_list args) {
         while (*fmt != '\0') {
                 if (*fmt == '%') {
                         fmt++;
@@ -105,6 +102,11 @@ void kprintf(const char *fmt, ...) {
                 }
                 fmt++;
         }
+}
 
+void kprintf(const char *fmt, ...) {
+        va_list args;
+        va_start(args, fmt);
+        vkprintf(fmt, args);
         va_end(args);
 }
