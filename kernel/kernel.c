@@ -4,6 +4,7 @@
 #include <drivers/pit.h>
 #include <drivers/vga.h>
 #include <klib/kprintf.h>
+#include <shell/shell.h>
 
 void kernel_main(uint32_t mb2_magic, uint32_t mb2_info_ptr) {
         (void)mb2_magic;
@@ -42,5 +43,10 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info_ptr) {
         /* Enable hardware interrupts */
         __asm__ volatile("sti");
 
-        keyboard_echo_debug();
+        vga_setcolor(VGA_COLOR_LIGHT_GREEN, VGA_COLOR_BLUE);
+        kprintf("[OK] ");
+        vga_setcolor(VGA_COLOR_LIGHT_BROWN, VGA_COLOR_BLUE);
+        kprintf("Shell Initialized\n");
+
+        shell_run();
 }
