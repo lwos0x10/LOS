@@ -115,7 +115,7 @@ void pmm_init(uint32_t mb2_info_addr) {
         /* Also mark page 0 as used (null pointer protection) */
         mmap_set(0);
 
-        initial_debug("PMM Initialized (%d MB)", (uint32_t)(total_memory_bytes / 1024 / 1024));
+        debug_ok("PMM Initialized (%d MB)", (uint32_t)(total_memory_bytes / 1024 / 1024));
 }
 
 void *pmm_alloc_block(void) {

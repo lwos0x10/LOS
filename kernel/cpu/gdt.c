@@ -25,5 +25,5 @@ void gdt_init() {
         gdt_set_gate(4, 0, 0xFFFFFFFF, 0xF2, 0xCF); // User Data
 
         gdt_flush((uint32_t)&gp);
-        initial_debug("GDT Initialized");
+        debug_ok("GDT Initialized");
 }

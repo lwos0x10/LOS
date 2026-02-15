@@ -121,7 +121,7 @@ static void keyboard_callback(struct registers *r) {
 
 void keyboard_init(void) {
         irq_register_handler(1, keyboard_callback);
-        initial_debug("Keyboard Initialized");
+        debug_ok("Keyboard Initialized");
 }
 
 void keyboard_echo_debug(void) {

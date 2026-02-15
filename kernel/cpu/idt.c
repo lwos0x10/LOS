@@ -31,5 +31,5 @@ void idt_init(void) {
 
         /* Load the IDT */
         idt_flush((uint32_t)&idtp);
-        initial_debug("IDT Initialized");
+        debug_ok("IDT Initialized");
 }

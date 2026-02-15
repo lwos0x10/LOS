@@ -211,7 +211,7 @@ static void shell_prompt(void) {
 }
 
 void shell_run(void) {
-        initial_debug("Shell Initialized");
+        debug_ok("Shell Initialized");
         kprintf("\nType 'help' for available commands.\n\n");
         for (;;) {
                 shell_prompt();
