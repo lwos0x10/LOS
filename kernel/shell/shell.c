@@ -106,7 +106,7 @@ static void cmd_help(void) {
         kprintf("  clear    - Clear the screen\n");
         kprintf("  echo     - Print text (usage: echo <text>)\n");
         kprintf("  info     - Show OS info\n");
-        kprintf("  debug    - Debugging tools (table, info, alloc)\n");
+        kprintf("  debug    - Debugging tools (table, info, alloc, crash)\n");
         kprintf("  reboot   - Reboot the system\n");
         kprintf("  poweroff - Shutdown the system\n");
 }
@@ -142,14 +142,21 @@ static void cmd_poweroff(void) {
         for (;;) {}
 }
 
+static void cmd_crash(void) {
+        kprintf("Crashing... Accessing 0xC0000000\n");
+        uint32_t *ptr = (uint32_t*)0xC0000000;
+        uint32_t val = *ptr;
+        kprintf("Read: 0x%x\n", val);
+}
+
 static void cmd_alloc_test(void) {
         kprintf("Testing Heap Allocation...\n");
         
         void *ptr1 = kmalloc(100);
         kprintf("Allocated 100 bytes at 0x%x\n", (uint32_t)ptr1);
         if (ptr1) {
-             strcpy((char *)ptr1, "Hello Heap!");
-             kprintf("Content: %s\n", (char *)ptr1);
+                strcpy((char *)ptr1, "Hello Heap!");
+                kprintf("Content: %s\n", (char *)ptr1);
         }
         
         void *ptr2 = kmalloc(50);
@@ -178,6 +185,7 @@ static void cmd_debug(const char *args) {
                 kprintf("  table    - Show heap allocation table\n");
                 kprintf("  info     - Show heap summary info\n");
                 kprintf("  alloc    - Run heap allocation test\n");
+                kprintf("  crash    - Trigger a Page Fault\n");
                 return;
         }
         
@@ -187,6 +195,8 @@ static void cmd_debug(const char *args) {
                 heap_print_info();
         } else if (strcmp(args, "alloc") == 0) {
                 cmd_alloc_test();
+        } else if (strcmp(args, "crash") == 0) {
+                cmd_crash();
         } else {
                 kprintf("Unknown debug command: %s\n", args);
         }

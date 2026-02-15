@@ -74,6 +74,12 @@ void isr_install(void) {
 
 void isr_handler(struct registers *r) {
         if (r->int_no < 32) {
+                if (r->int_no == 14) {
+                        uint32_t cr2;
+                        __asm__ volatile("mov %%cr2, %0" : "=r"(cr2));
+                        kprintf("PAGE FAULT at 0x%x (err_code 0x%x)\n", cr2, r->err_code);
+                }
+                
                 kprintf("EXCEPTION: %s (int %d, err_code 0x%x)\n",
                         exception_messages[r->int_no], r->int_no, r->err_code);
                 kprintf("  EIP=0x%x  CS=0x%x  EFLAGS=0x%x\n", r->eip, r->cs, r->eflags);
