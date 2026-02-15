@@ -29,16 +29,39 @@ void vga_init() {
         vga_clear();
 }
 
+static void vga_scroll(void) {
+        /* Move every row up by one */
+        for (int i = 0; i < (VGA_ROW - 1) * VGA_COLUMN; i++) {
+                VGA[i] = VGA[i + VGA_COLUMN];
+        }
+        /* Clear the last row */
+        for (int i = (VGA_ROW - 1) * VGA_COLUMN; i < VGA_ROW * VGA_COLUMN; i++) {
+                VGA[i] = vga_entry(' ');
+        }
+        ROW = VGA_ROW - 1;
+}
+
 void vga_putc(char c) {
         if (c == '\n') {
                 COLUMN = 0;
                 ROW++;
+                if (ROW >= VGA_ROW) {
+                        vga_scroll();
+                }
                 return;
         }
 
         const size_t index = ROW * VGA_COLUMN + COLUMN;
         VGA[index] = vga_entry(c);
         COLUMN++;
+
+        if (COLUMN >= VGA_COLUMN) {
+                COLUMN = 0;
+                ROW++;
+                if (ROW >= VGA_ROW) {
+                        vga_scroll();
+                }
+        }
 }
 
 void vga_write(const char* str) {

@@ -15,7 +15,10 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info_ptr) {
         vga_clear();
         vga_write("Welcome to LOS.\n");
 
-        int x = 10 / 0;
-        kprintf("%d", x);
+        int x = 0;
+        for (;;) {
+                kprintf("%d\n", x);
+                x++;
+        }
         for (;;) { __asm__ volatile("hlt"); }
 }

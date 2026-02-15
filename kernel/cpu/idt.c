@@ -1,5 +1,6 @@
 #include <cpu/idt.h>
 #include <cpu/isr.h>
+#include <cpu/irq.h>
 
 struct idt_entry idt_entries[256];
 struct idt_ptr   idtp;
@@ -24,6 +25,10 @@ void idt_init(void) {
     /* Install the 32 CPU exception handlers */
     isr_install();
 
+    /* Install the 16 IRQ handlers (PIC remapped inside) */
+    irq_install();
+
     /* Load the IDT */
     idt_flush((uint32_t)&idtp);
 }
+
