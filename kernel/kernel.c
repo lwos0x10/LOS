@@ -15,10 +15,29 @@ void kernel_main(uint32_t mb2_magic, uint32_t mb2_info_ptr) {
         vga_init();
         vga_setcolor(VGA_COLOR_LIGHT_BROWN, VGA_COLOR_BLUE);
         vga_clear();
-        vga_write("Welcome to LOS.\n");
+        vga_write("Welcome to LOS.\n\n");
+
+        vga_setcolor(VGA_COLOR_LIGHT_GREEN, VGA_COLOR_BLUE);
+        kprintf("[OK] ");
+        vga_setcolor(VGA_COLOR_LIGHT_BROWN, VGA_COLOR_BLUE);
+        kprintf("GDT Initialized\n");
+
+        vga_setcolor(VGA_COLOR_LIGHT_GREEN, VGA_COLOR_BLUE);
+        kprintf("[OK] ");
+        vga_setcolor(VGA_COLOR_LIGHT_BROWN, VGA_COLOR_BLUE);
+        kprintf("IDT Initialized\n");
 
         pit_init(100);
+        vga_setcolor(VGA_COLOR_LIGHT_GREEN, VGA_COLOR_BLUE);
+        kprintf("[OK] ");
+        vga_setcolor(VGA_COLOR_LIGHT_BROWN, VGA_COLOR_BLUE);
+        kprintf("PIT Initialized (100 Hz)\n");
+
         keyboard_init();
+        vga_setcolor(VGA_COLOR_LIGHT_GREEN, VGA_COLOR_BLUE);
+        kprintf("[OK] ");
+        vga_setcolor(VGA_COLOR_LIGHT_BROWN, VGA_COLOR_BLUE);
+        kprintf("Keyboard Initialized\n");
 
         /* Enable hardware interrupts */
         __asm__ volatile("sti");

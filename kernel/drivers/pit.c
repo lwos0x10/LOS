@@ -25,8 +25,6 @@ void pit_init(uint32_t frequency) {
 
         /* Register our timer handler on IRQ 0 */
         irq_register_handler(0, timer_callback);
-
-        kprintf("PIT initialized at %d Hz\n", frequency);
 }
 
 uint32_t pit_get_ticks(void) {
