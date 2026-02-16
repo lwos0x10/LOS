@@ -20,6 +20,14 @@ static uint32_t page_directory[ENTRIES_PER_PD] __attribute__((aligned(4096)));
  */
 static uint32_t first_page_table[ENTRIES_PER_PT] __attribute__((aligned(4096)));
 
+/* 
+ * Second Page Table:
+ * - Must be 4KB aligned.
+ * - Contains 1024 entries, mapping 4MB of memory (0x400000 - 0x7FFFFF).
+ * - Used for Identity Mapping the heap.
+ */
+static uint32_t second_page_table[ENTRIES_PER_PT] __attribute__((aligned(4096)));
+
 void load_page_directory(uint32_t* pd_addr) {
         __asm__ volatile("mov %0, %%cr3" :: "r"(pd_addr));
 }
@@ -101,6 +109,18 @@ void vmm_init(void) {
            The first entry of PD (covering 0x0 - 0x3FFFFF) points to our page table.
         */
         page_directory[0] = ((uint32_t)first_page_table) | PAGE_PRESENT | PAGE_RW;
+
+        /* 3.5 Setup Second Page Table (Identity Map 0x400000 - 0x7FFFFF)
+           This maps the next 4MB of physical memory, which includes the heap.
+        */
+        for (int i = 0; i < ENTRIES_PER_PT; i++) {
+                /* phys_addr = 0x400000 + i * 4096 */
+                uint32_t phys = 0x400000 + (i * PAGE_SIZE);
+                second_page_table[i] = phys | PAGE_PRESENT | PAGE_RW;
+        }
+
+        /* 3.6 Add Second Page Table to Page Directory */
+        page_directory[1] = ((uint32_t)second_page_table) | PAGE_PRESENT | PAGE_RW;
 
         /* 4. Register Page Fault Handler (ISR 14) 
            (Assuming isr_register_handler or similar exists, or we modify isr.c directly.
